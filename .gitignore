@@ -1,0 +1,28 @@
+# Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
+.vs
+bin
+obj
+!/tools/bin
+tools/*/Temp
+
+# Cloud Project package
+csx
+
+# mstest test results
+TestResults
+
+# NuGet packages
+packages
+
+# solution related files
+*.user
+*.suo
+*.orig
+*.build.csdef
+
+# Stylecop Settings
+Stylecop.Cache
+ExamineIndexes
+
+# Third-Party
+node_modules
