@@ -25,7 +25,7 @@ namespace Southworks.Prode.Services.Data
         public async Task<UserEntity> SetUser(UserEntity entity)
         {
             UserEntity existingEntity = null;
-            if (entity.Id != null)
+            if (entity.Id != null || Guid.Empty.Equals(entity.Id))
             {
                 existingEntity = await this.usersRepository.GetAsync(entity.Id);
             }

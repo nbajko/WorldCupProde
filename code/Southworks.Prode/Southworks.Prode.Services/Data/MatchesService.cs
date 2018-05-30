@@ -15,6 +15,13 @@ namespace Southworks.Prode.Services.Data
             this.matchesRepository = matchesRepository;
         }
 
+        public bool ExistsMatch(Guid homeTeam, Guid awayTeam, MatchStage stage)
+        {
+            return this.matchesRepository.Get(x => ((homeTeam.Equals(x.HomeTeam) && awayTeam.Equals(x.AwayTeam))
+                || (awayTeam.Equals(x.HomeTeam) && homeTeam.Equals(x.AwayTeam)))
+                && x.Stage == stage).Any();
+        }
+
         public IQueryable<MatchEntity> GetMatches()
         {
             return this.matchesRepository.Get();
@@ -23,7 +30,7 @@ namespace Southworks.Prode.Services.Data
         public async Task<MatchEntity> SaveMatch(MatchEntity entity)
         {
             MatchEntity existingEntity = null;
-            if (entity.Id != null)
+            if (entity.Id != null || Guid.Empty.Equals(entity.Id))
             {
                 existingEntity = await this.matchesRepository.GetAsync(entity.Id);
             }

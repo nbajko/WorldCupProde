@@ -201,6 +201,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\IdentityHelper.cs" />
+    <Compile Include="Models\MatchModel.cs" />
+    <Compile Include="Models\SelectLists.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -243,10 +245,9 @@
     <Content Include="Views\Auth\_unauthorized.cshtml" />
     <Content Include="Views\Auth\_accessDenied.cshtml" />
     <Content Include="Views\Admin\Matches.cshtml" />
+    <Content Include="Views\Admin\NewMatch.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>

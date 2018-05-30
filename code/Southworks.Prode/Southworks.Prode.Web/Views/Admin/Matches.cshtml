@@ -1,5 +1,10 @@
-﻿@{
+﻿@model IEnumerable<MatchModel>
+
+@{
     ViewBag.Title = "Partidos";
+
+    var countries = ViewBag.Countries as IEnumerable<Southworks.Prode.Data.Models.CountryEntity>;
+    var culture = new System.Globalization.CultureInfo("es-AR");
 }
 
 <div class="jumbotron">
@@ -9,5 +14,42 @@
 
 <div class="row">
     <div>
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-center">
+                        Grupo
+                    </th>
+                    <th class="text-center">
+                        Dia/Hora
+                    </th>
+                    <th colspan="2" class="text-center">
+                        Partido
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var match in Model)
+                {
+                    var homeTeam = countries.FirstOrDefault(x => x.Id.Equals(match.HomeTeam));
+                    var awayTeam = countries.FirstOrDefault(x => x.Id.Equals(match.AwayTeam));
+
+                    <tr>
+                        <td class="text-center">
+                            @SelectLists.MatchStages.FirstOrDefault(x => match.Stage.ToString().Equals(x.Value)).Text
+                        </td>
+                        <td class="text-center">
+                            @match.PlayedOn.ToLocalTime().ToString("dddd d 'de' MMMM, H:mm 'hs'", culture)
+                        </td>
+                        <td class="text-right">
+                            @homeTeam.Name <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@homeTeam.Code.ToLower()" alt="@homeTeam.Code" style="width: 64px" />
+                        </td>
+                        <td class="text-left">
+                            <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@awayTeam.Code.ToLower()" alt="@awayTeam.Code" style="width: 64px" /> @awayTeam.Name
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

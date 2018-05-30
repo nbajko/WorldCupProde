@@ -16,6 +16,13 @@ namespace Southworks.Prode.Web
             builder.RegisterAssemblyModules(typeof(ProdeDbContext).Assembly);
             builder.RegisterAssemblyModules(typeof(UsersService).Assembly);
 
+            builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterModelBinders(typeof(MvcApplication).Assembly);
+            builder.RegisterModelBinderProvider();
+            builder.RegisterModule<AutofacWebTypesModule>();
+            builder.RegisterSource(new ViewRegistrationSource());
+            builder.RegisterFilterProvider();
+
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 

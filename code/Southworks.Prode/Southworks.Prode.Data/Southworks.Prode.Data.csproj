@@ -61,6 +61,10 @@
     <Compile Include="Migrations\201805290145281_InitialMigration.Designer.cs">
       <DependentUpon>201805290145281_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805300407265_AddMatchesTable.cs" />
+    <Compile Include="Migrations\201805300407265_AddMatchesTable.Designer.cs">
+      <DependentUpon>201805300407265_AddMatchesTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CountryEntity.cs" />
     <Compile Include="Models\IIdentifiable.cs" />
@@ -87,6 +91,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201805290145281_InitialMigration.resx">
       <DependentUpon>201805290145281_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805300407265_AddMatchesTable.resx">
+      <DependentUpon>201805300407265_AddMatchesTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
