@@ -7,8 +7,6 @@ namespace Southworks.Prode.Web.Models
 {
     public class MatchModel : IValidatableObject
     {
-        public Guid Id { get; set; }
-
         [Required]
         public Guid HomeTeam { get; set; }
 

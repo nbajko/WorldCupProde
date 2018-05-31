@@ -25,5 +25,7 @@ namespace Southworks.Prode.Data
         public DbSet<CountryEntity> CountriesDbSet { get; set; }
 
         public DbSet<MatchEntity> MatchesDbSet { get; set; }
+
+        public DbSet<MatchResultEntity> MatchResultsDbSet { get; set; }
     }
 }

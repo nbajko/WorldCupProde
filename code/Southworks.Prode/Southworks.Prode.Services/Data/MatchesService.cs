@@ -27,6 +27,11 @@ namespace Southworks.Prode.Services.Data
             return this.matchesRepository.Get();
         }
 
+        public MatchEntity GetMatch(Guid id)
+        {
+            return this.matchesRepository.Get(id);
+        }
+
         public async Task<MatchEntity> SaveMatch(MatchEntity entity)
         {
             MatchEntity existingEntity = null;

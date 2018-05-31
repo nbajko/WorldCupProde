@@ -65,14 +65,29 @@
     <Compile Include="Migrations\201805300407265_AddMatchesTable.Designer.cs">
       <DependentUpon>201805300407265_AddMatchesTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805310030273_AddMatchResultsTable.cs" />
+    <Compile Include="Migrations\201805310030273_AddMatchResultsTable.Designer.cs">
+      <DependentUpon>201805310030273_AddMatchResultsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805310309521_AddMatchResultsPenalties.cs" />
+    <Compile Include="Migrations\201805310309521_AddMatchResultsPenalties.Designer.cs">
+      <DependentUpon>201805310309521_AddMatchResultsPenalties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805310350009_UpdateMatchResultsPenalties.cs" />
+    <Compile Include="Migrations\201805310350009_UpdateMatchResultsPenalties.Designer.cs">
+      <DependentUpon>201805310350009_UpdateMatchResultsPenalties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CountryEntity.cs" />
     <Compile Include="Models\IIdentifiable.cs" />
     <Compile Include="Models\MatchEntity.cs" />
+    <Compile Include="Models\MatchResultEntity.cs" />
     <Compile Include="Models\UserEntity.cs" />
     <Compile Include="ProdeDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\IMatchResultsRepository.cs" />
+    <Compile Include="Repositories\MatchResultsRepository.cs" />
     <Compile Include="Repositories\MatchesRepository.cs" />
     <Compile Include="Repositories\CountriesRepository.cs" />
     <Compile Include="Repositories\IBaseRepository.cs" />
@@ -94,6 +109,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805300407265_AddMatchesTable.resx">
       <DependentUpon>201805300407265_AddMatchesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805310030273_AddMatchResultsTable.resx">
+      <DependentUpon>201805310030273_AddMatchResultsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805310309521_AddMatchResultsPenalties.resx">
+      <DependentUpon>201805310309521_AddMatchResultsPenalties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805310350009_UpdateMatchResultsPenalties.resx">
+      <DependentUpon>201805310350009_UpdateMatchResultsPenalties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

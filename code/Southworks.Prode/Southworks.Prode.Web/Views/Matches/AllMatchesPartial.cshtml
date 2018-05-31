@@ -1,0 +1,70 @@
+﻿@model IEnumerable<MatchViewModel>
+
+@{
+    var culture = new System.Globalization.CultureInfo("es-AR");
+    Layout = null;
+}
+
+<table class="table table-matches">
+    <tbody>
+        @foreach (var match in Model)
+        {
+            <tr>
+                <td class="match-stage">
+                    @MatchStagesHelper.MatchStages.FirstOrDefault(x => match.Stage.ToString().Equals(x.Value)).Text
+                </td>
+                <td class="match-date">
+                    @match.PlayedOn.ToLocalTime().ToString("dddd d 'de' MMMM, H:mm 'hs'", culture)
+                </td>
+                <td class="text-right">
+                    @match.HomeTeam <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@match.HomeTeamCode.ToLower()" alt="@match.HomeTeamCode" style="width: 64px" />
+                </td>
+                @if (ViewBag.AllowSaveResults)
+                {
+                    <td class="text-left">
+                        <input type="number" value="@(match.Completed ? match.HomeTeamGoals.ToString() : string.Empty)" class="match-goals match-home text-center" />
+                        @if (match.Stage.SupportPenalties())
+                        {
+                            <span>(</span><input type="number" value="@(match.Completed ? match.HomeTeamPenalties.ToString() : string.Empty)" class="match-penalties match-home text-center" /><span>)</span>
+                        }
+                    </td>
+                }
+                else if (match.Completed)
+                {
+                    <td class="text-center">@match.HomeTeamGoals @(match.PenaltiesDefinition ? $"({match.HomeTeamPenalties})" : string.Empty)</td>
+                }
+                @if (ViewBag.AllowSaveResults)
+                {
+                    <td class="text-right">
+                        @if (match.Stage.SupportPenalties())
+                        {
+                            <span>(</span><input type="number" value="@(match.Completed ? match.AwayTeamPenalties.ToString() : string.Empty)" class="match-penalties match-away text-center" /><span>)</span>
+                        }
+                        <input type="number" value="@(match.Completed ? match.AwayTeamGoals.ToString() : string.Empty)" class="match-goals match-away text-center" />
+                    </td>
+                }
+                else if (match.Completed)
+                {
+                    <td class="text-center">@(match.PenaltiesDefinition ? $"({match.AwayTeamPenalties})" : string.Empty) @match.AwayTeamGoals</td>
+                }
+                <td class="text-left">
+                    <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@match.AwayTeamCode.ToLower()" alt="@match.AwayTeamCode" style="width: 64px" /> @match.AwayTeam
+                </td>
+                @if (ViewBag.AllowSaveResults)
+                {
+                    <td>
+                        <input type="button" value="Guardar" data-match-id="@match.Id" class="match-save" />
+                        @if (ViewBag.AllowCalculateResults)
+                        {
+                            <input type="button" value="Calcular" data-match-id="@match.Id" class="match-calculate" />
+                        }
+                        <img src="~/Content/Images/loading.gif" class="progress-circle" style="display:none;" />
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green; display:none;"></span>
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true" style="color:red; display:none;"></span>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+

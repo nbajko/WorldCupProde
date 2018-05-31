@@ -12,5 +12,7 @@ namespace Southworks.Prode.Services.Data
         Task<MatchEntity> SaveMatch(MatchEntity entity);
 
         bool ExistsMatch(Guid homeTeam, Guid awayTeam, MatchStage stage);
+
+        MatchEntity GetMatch(Guid id);
     }
 }

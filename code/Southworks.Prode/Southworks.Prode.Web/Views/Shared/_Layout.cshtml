@@ -23,7 +23,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav mr-auto">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Partidos", "Matches", "Admin")</li>
+                    <li>@Html.ActionLink("Admin", "Matches", "Admin")</li>
                 </ul>
 
                 <span class="navbar-text">
@@ -44,6 +44,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/prode")
     @RenderSection("scripts", required: false)
 </body>
 </html>

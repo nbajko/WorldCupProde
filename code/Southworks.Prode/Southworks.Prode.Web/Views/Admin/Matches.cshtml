@@ -7,6 +7,87 @@
     var culture = new System.Globalization.CultureInfo("es-AR");
 }
 
+@section Scripts
+{
+<script>
+        $('.match-save').click(function (obj) {
+            var $target = $(obj.target),
+                $penalties = $target.closest('tr').find('.match-penalties'),
+                homePenalties = $target.closest('tr').find('.match-penalties.match-home').val(),
+                awayPenalties = $target.closest('tr').find('.match-penalties.match-away').val(),
+                homeGoals = $target.closest('tr').find('.match-goals.match-home').val(),
+                awayGoals = $target.closest('tr').find('.match-goals.match-away').val(),
+                matchId = $target.data('match-id'),
+                dataJSON = { id: matchId, homeGoals: homeGoals, awayGoals: awayGoals };
+
+            $target.siblings('.progress-circle').hide();
+            $target.siblings('.glyphicon-ok').hide();
+            $target.siblings('.glyphicon-remove').hide();
+
+            if (homeGoals == '' || awayGoals == '') {
+                window.helpers().alertError('<strong>Ups.</strong> Te falto cargar el resultado!');
+                $target.siblings('.glyphicon-remove').show();
+                return;
+            }
+
+            if (homeGoals < 0 || awayGoals < 0) {
+                window.helpers().alertError('<strong>Ups.</strong> Los goles tienen que ser positivos!');
+                $target.siblings('.glyphicon-remove').show();
+                return;
+            }
+
+            if ($penalties.length && homeGoals == awayGoals) {
+                if (homePenalties == '' || awayPenalties == '') {
+                    window.helpers().alertError('<strong>Ups.</strong> Te falto cargar los penales!');
+                    $target.siblings('.glyphicon-remove').show();
+                    return;
+                }
+
+                if (homePenalties < 0 || awayPenalties < 0) {
+                    window.helpers().alertError('<strong>Ups.</strong> Los penales tienen que ser positivos!');
+                    $target.siblings('.glyphicon-remove').show();
+                    return;
+                }
+
+                if (homePenalties == awayPenalties) {
+                    window.helpers().alertError('<strong>Ups.</strong> Tenes que especificar un ganador por penales!');
+                    $target.siblings('.glyphicon-remove').show();
+                    return;
+                }
+
+                dataJSON.homePenalties = homePenalties;
+                dataJSON.awayPenalties = awayPenalties;
+            }
+
+            $target.siblings('.progress-circle').show();
+            $target.prop('disabled', true);
+
+            $.ajax('@Url.Action("SetMatchResult", "Admin")',
+                {
+                    type: 'POST',
+                    data: dataJSON,
+                    success: function () {
+                        $target.siblings('.glyphicon-ok').show();
+                    }
+                }).fail(function (e) {
+                    var errorMessage = 'Hubo un error al guardar el resultado!';
+                    
+                    if (e.responseJSON && e.responseJSON.ExceptionMessage) {
+                        errorMessage = e.responseJSON.ExceptionMessage;
+                    } else if (e.responseText) {
+                        console.error(e.responseText);
+                    }
+
+                    $target.siblings('.glyphicon-remove').show();
+                    window.helpers().alertError('<strong>Ups.</strong> ' + errorMessage);
+                }).always(function () {
+                    $target.siblings('.progress-circle').hide();
+                    $target.prop('disabled', false);
+                });
+        });
+</script>
+}
+
 <div class="jumbotron">
     <h1>Administración de Partidos</h1>
     @Html.ActionLink("Nuevo", "NewMatch", "Admin", null, new { @class = "btn btn-primary btn-lg" })
@@ -14,42 +95,6 @@
 
 <div class="row">
     <div>
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th class="text-center">
-                        Grupo
-                    </th>
-                    <th class="text-center">
-                        Dia/Hora
-                    </th>
-                    <th colspan="2" class="text-center">
-                        Partido
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var match in Model)
-                {
-                    var homeTeam = countries.FirstOrDefault(x => x.Id.Equals(match.HomeTeam));
-                    var awayTeam = countries.FirstOrDefault(x => x.Id.Equals(match.AwayTeam));
-
-                    <tr>
-                        <td class="text-center">
-                            @SelectLists.MatchStages.FirstOrDefault(x => match.Stage.ToString().Equals(x.Value)).Text
-                        </td>
-                        <td class="text-center">
-                            @match.PlayedOn.ToLocalTime().ToString("dddd d 'de' MMMM, H:mm 'hs'", culture)
-                        </td>
-                        <td class="text-right">
-                            @homeTeam.Name <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@homeTeam.Code.ToLower()" alt="@homeTeam.Code" style="width: 64px" />
-                        </td>
-                        <td class="text-left">
-                            <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@awayTeam.Code.ToLower()" alt="@awayTeam.Code" style="width: 64px" /> @awayTeam.Name
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @Html.Action("AllMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = true, AllowCalculateResults = true })
     </div>
 </div>

@@ -4,7 +4,7 @@ using Southworks.Prode.Data.Models;
 
 namespace Southworks.Prode.Web.Models
 {
-    public static class SelectLists
+    public static class MatchStagesHelper
     {
         public static IEnumerable<SelectListItem> MatchStages = new List<SelectListItem>
         {
@@ -21,5 +21,10 @@ namespace Southworks.Prode.Web.Models
             new SelectListItem { Text = "3er puesto", Value = MatchStage.ThirdPlace.ToString() },
             new SelectListItem { Text = "Final", Value = MatchStage.Final.ToString() }
         };
+
+        public static bool SupportPenalties(this MatchStage matchStage)
+        {
+            return matchStage > MatchStage.Round16;
+        }
     }
 }
