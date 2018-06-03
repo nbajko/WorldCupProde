@@ -1,0 +1,32 @@
+﻿@model IEnumerable<StandingsViewModel>
+
+@{
+    Layout = null;
+}
+
+<table class="table table-striped table-standings">
+    <thead>
+        <tr>
+            <th>Jugador</th>
+            <th class="text-center">Puntos</th>
+            <th class="text-center">Aciertos</th>
+            <th class="text-center">R. Exacto</th>
+            <th class="text-center">Penales</th>
+            <th class="text-center">Extra</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var player in Model)
+        {
+            <tr>
+                <td>@player.UserName (@player.UserEmail)</td>
+                <td class="text-center">@player.Points</td>
+                <td class="text-center">@player.Results</td>
+                <td class="text-center">@player.ExactResult</td>
+                <td class="text-center">@player.Penalties</td>
+                <td class="text-center">@player.Extra</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

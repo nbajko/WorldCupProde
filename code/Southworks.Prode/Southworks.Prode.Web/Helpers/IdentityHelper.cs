@@ -7,6 +7,8 @@ namespace Southworks.Prode.Web.Helpers
 {
     public static class IdentityHelper
     {
+        private static bool? lockdownEnabled;
+
         public static string GetEmailAddress(this IIdentity identity)
         {
             var username = identity.ClaimValue(ClaimTypes.Email);
@@ -46,7 +48,7 @@ namespace Southworks.Prode.Web.Helpers
             return identity.ClaimValue("name");
         }
 
-        public static string GetUserDisplayName(IIdentity identity)
+        public static string GetUserDisplayName(this IIdentity identity)
         {
             return $"{identity.GetName()} ({identity.GetEmailAddress()})";
         }
@@ -72,6 +74,21 @@ namespace Southworks.Prode.Web.Helpers
             }
 
             return value;
+        }
+
+        public static bool UserIsInRole(this IPrincipal principal, string role)
+        {
+            if (!lockdownEnabled.HasValue)
+            {
+                lockdownEnabled = GlobalAuthFilterConfig.LockdownEnabled();
+            }
+
+            if (!lockdownEnabled.Value)
+            {
+                return true;
+            }
+
+            return principal.IsInRole(role);
         }
     }
 }

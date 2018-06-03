@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MatchViewModel>
+﻿@model MatchesListViewModel
 
 @{
     var culture = new System.Globalization.CultureInfo("es-AR");
@@ -7,9 +7,9 @@
 
 <table class="table table-matches">
     <tbody>
-        @foreach (var match in Model)
+        @foreach (var match in Model.Matches)
         {
-            <tr>
+            <tr class="@(Model.Request.AllowSaveResults && match.Alert ? "danger" : string.Empty)">
                 <td class="match-stage">
                     @MatchStagesHelper.MatchStages.FirstOrDefault(x => match.Stage.ToString().Equals(x.Value)).Text
                 </td>
@@ -19,13 +19,13 @@
                 <td class="text-right">
                     @match.HomeTeam <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@match.HomeTeamCode.ToLower()" alt="@match.HomeTeamCode" style="width: 64px" />
                 </td>
-                @if (ViewBag.AllowSaveResults)
+                @if (Model.Request.AllowSaveResults)
                 {
                     <td class="text-left">
-                        <input type="number" value="@(match.Completed ? match.HomeTeamGoals.ToString() : string.Empty)" class="match-goals match-home text-center" />
+                        <input type="number" value="@(match.HomeTeamGoals.HasValue ? match.HomeTeamGoals.ToString() : string.Empty)" class="match-goals match-home text-center" />
                         @if (match.Stage.SupportPenalties())
                         {
-                            <span>(</span><input type="number" value="@(match.Completed ? match.HomeTeamPenalties.ToString() : string.Empty)" class="match-penalties match-home text-center" /><span>)</span>
+                            <span>(</span><input type="number" value="@(match.HomeTeamPenalties.HasValue ? match.HomeTeamPenalties.ToString() : string.Empty)" class="match-penalties match-home text-center" /><span>)</span>
                         }
                     </td>
                 }
@@ -33,14 +33,14 @@
                 {
                     <td class="text-center">@match.HomeTeamGoals @(match.PenaltiesDefinition ? $"({match.HomeTeamPenalties})" : string.Empty)</td>
                 }
-                @if (ViewBag.AllowSaveResults)
+                @if (Model.Request.AllowSaveResults)
                 {
                     <td class="text-right">
                         @if (match.Stage.SupportPenalties())
                         {
-                            <span>(</span><input type="number" value="@(match.Completed ? match.AwayTeamPenalties.ToString() : string.Empty)" class="match-penalties match-away text-center" /><span>)</span>
+                            <span>(</span><input type="number" value="@(match.AwayTeamPenalties.HasValue ? match.AwayTeamPenalties.ToString() : string.Empty)" class="match-penalties match-away text-center" /><span>)</span>
                         }
-                        <input type="number" value="@(match.Completed ? match.AwayTeamGoals.ToString() : string.Empty)" class="match-goals match-away text-center" />
+                        <input type="number" value="@(match.AwayTeamGoals.HasValue ? match.AwayTeamGoals.ToString() : string.Empty)" class="match-goals match-away text-center" />
                     </td>
                 }
                 else if (match.Completed)
@@ -50,19 +50,19 @@
                 <td class="text-left">
                     <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@match.AwayTeamCode.ToLower()" alt="@match.AwayTeamCode" style="width: 64px" /> @match.AwayTeam
                 </td>
-                @if (ViewBag.AllowSaveResults)
-                {
-                    <td>
-                        <input type="button" value="Guardar" data-match-id="@match.Id" class="match-save" />
-                        @if (ViewBag.AllowCalculateResults)
+                <td>
+                    @if (Model.Request.AllowSaveResults && match.AllowToSave)
+                    {
+                        <button type="button" class="btn btn-default match-save" data-match-id="@match.Id">Guardar</button>
+                        if (Model.Request.AllowCalculateResults)
                         {
-                            <input type="button" value="Calcular" data-match-id="@match.Id" class="match-calculate" />
+                            <button type="button" class="btn btn-default match-calculate" data-match-id="@match.Id">Calcular</button>
                         }
                         <img src="~/Content/Images/loading.gif" class="progress-circle" style="display:none;" />
                         <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green; display:none;"></span>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true" style="color:red; display:none;"></span>
-                    </td>
-                }
+                    }
+                </td>
             </tr>
         }
     </tbody>

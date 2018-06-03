@@ -15,6 +15,11 @@ namespace Southworks.Prode.Services.Data
             this.usersRepository = usersRepository;
         }
 
+        public IQueryable<UserEntity> Get()
+        {
+            return this.usersRepository.Get();
+        }
+
         public UserEntity GetUser(string emailAddress)
         {
             return this.usersRepository
@@ -25,7 +30,7 @@ namespace Southworks.Prode.Services.Data
         public async Task<UserEntity> SetUser(UserEntity entity)
         {
             UserEntity existingEntity = null;
-            if (entity.Id != null || Guid.Empty.Equals(entity.Id))
+            if (entity.Id != null && !Guid.Empty.Equals(entity.Id))
             {
                 existingEntity = await this.usersRepository.GetAsync(entity.Id);
             }

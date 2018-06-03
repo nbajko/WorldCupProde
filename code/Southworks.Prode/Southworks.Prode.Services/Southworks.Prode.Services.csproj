@@ -47,12 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\BetResultsService.cs" />
     <Compile Include="Data\CountriesService.cs" />
+    <Compile Include="Data\IBetResultsService.cs" />
     <Compile Include="Data\ICountriesService.cs" />
     <Compile Include="Data\IDataService.cs" />
+    <Compile Include="Data\IMatchBetsService.cs" />
     <Compile Include="Data\IMatchResultsService.cs" />
     <Compile Include="Data\IMatchesService.cs" />
     <Compile Include="Data\IUsersService.cs" />
+    <Compile Include="Data\MatchBetsService.cs" />
     <Compile Include="Data\MatchResultsService.cs" />
     <Compile Include="Data\MatchesService.cs" />
     <Compile Include="Data\UsersService.cs" />

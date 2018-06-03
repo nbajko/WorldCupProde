@@ -1,31 +1,36 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = string.Empty;
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+@section Scripts
+{
+    <script>
+    $('.match-save').click(function (obj) {
+        window.helpers().saveMatch(obj, '@Url.Action("SetBetResult", "Player")');
+    });
+    </script>
+}
+
+<div class="row">
+    <div>
+        <h2>Tabla</h2>
+        @Html.Action("StandingsPartial", "Standings", new { count = 5 })
+        @Html.ActionLink("Tabla Completa", "Index", "Standings")
+    </div>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <div>
+        <h2>Ultimos partidos</h2>
+        @Html.Action("AllMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = false, Count = 3, ExcludePending = true, OrderByDescending = true })
+        @Html.ActionLink("Todos los partidos", "AllMatches", "Matches")
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div>
+        <h2>Proximos partidos</h2>
+        @Html.Action("MyMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = true, Count = 3, ExcludeCompleted = true })
+        @Html.ActionLink("Todos mis partidos", "AllMatches", "Player")
     </div>
 </div>

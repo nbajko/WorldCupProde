@@ -1,29 +1,40 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Southworks.Prode.Data.Models;
 using Southworks.Prode.Services.Data;
+using Southworks.Prode.Web.Features;
+using Southworks.Prode.Web.Helpers;
 using Southworks.Prode.Web.Models;
 
 namespace Southworks.Prode.Web.Controllers
 {
+    [RoleAuthorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IMatchesService matchesService;
         private readonly IMatchResultsService matchResultsService;
+        private readonly IMatchBetsService matchBetsService;
+        private readonly IBetResultsService betResultsService;
         private readonly ICountriesService countriesService;
+        private readonly IUsersService usersService;
 
         public AdminController(
             IMatchesService matchesService,
             IMatchResultsService matchResultsService,
-            ICountriesService countriesService)
+            IMatchBetsService matchBetsService,
+            IBetResultsService betResultsService,
+            ICountriesService countriesService,
+            IUsersService usersService)
         {
             this.matchesService = matchesService;
             this.matchResultsService = matchResultsService;
+            this.matchBetsService = matchBetsService;
+            this.betResultsService = betResultsService;
             this.countriesService = countriesService;
+            this.usersService = usersService;
         }
 
         // GET: Matches
@@ -81,6 +92,119 @@ namespace Southworks.Prode.Web.Controllers
             return RedirectToAction("Matches");
         }
 
+        [HttpGet]
+        public ActionResult GetMatchBetsResults(Guid matchId)
+        {
+            var match = this.matchesService.GetMatch(matchId);
+            if (match == null)
+            {
+                throw new Exception("El partido especificado no existe!");
+            }
+
+            var result = this.matchResultsService.GetResultByMatch(matchId);
+            if (match == null)
+            {
+                throw new Exception("No esta cargado el resultado para el partido especificado!");
+            }
+            
+            var bets = this.matchBetsService.GetBetsByMatch(matchId).ToList();
+            var users = this.usersService.Get().ToList();
+
+            var countries = this.countriesService.GetCountries().ToList();
+            var homeTeam = countries.FirstOrDefault(x => match.HomeTeam.Equals(x.Id));
+            var awayTeam = countries.FirstOrDefault(x => match.AwayTeam.Equals(x.Id));
+
+            var model = new BetResultsListViewModel
+            {
+                BetResultsList = bets.Select(x => new BetResultViewModel { Bet = x, BetResult = GetBetResult(x, result), User = users.FirstOrDefault(u => u.Id.Equals(x.UserId)) }).OrderByDescending(x => x.BetResult.Points),
+                Match = new MatchViewModel
+                {
+                    Id = match.Id,
+                    HomeTeamId = match.HomeTeam,
+                    HomeTeam = homeTeam.Name,
+                    HomeTeamCode = homeTeam.Code,
+                    HomeTeamGoals = result.HomeGoals,
+                    HomeTeamPenalties = result.HomePenalties,
+                    AwayTeamId = match.AwayTeam,
+                    AwayTeam = awayTeam.Name,
+                    AwayTeamCode = awayTeam.Code,
+                    AwayTeamGoals = result.AwayGoals,
+                    AwayTeamPenalties = result.AwayPenalties,
+                    PlayedOn = match.PlayedOn.Value,
+                    Stage = match.Stage,
+                    Completed = match.PlayedOn <= DateTime.UtcNow,
+                    PenaltiesDefinition = match.Stage.SupportPenalties() && result.HomeGoals == result.AwayGoals
+                }
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SaveMatchBetResults(Guid matchId)
+        {
+            var match = this.matchesService.GetMatch(matchId);
+            if (match == null)
+            {
+                throw new Exception("El partido especificado no existe!");
+            }
+
+            var result = this.matchResultsService.GetResultByMatch(matchId);
+            if (match == null)
+            {
+                throw new Exception("No esta cargado el resultado para el partido especificado!");
+            }
+
+            var bets = this.matchBetsService.GetBetsByMatch(matchId).ToList();
+
+            var betsResults = bets.Select(x => GetBetResult(x, result));
+
+            await this.betResultsService.SaveBetResults(betsResults);
+
+            return View("Matches");
+        }
+
+        public BetResultEntity GetBetResult(MatchBetEntity bet, MatchResultEntity result)
+        {
+            var hitPenalties = false;
+            if (result.HomePenalties.HasValue && result.AwayPenalties.HasValue)
+            {
+                hitPenalties = result.HomePenalties.Equals(bet.HomePenalties) && result.AwayPenalties.Equals(bet.AwayPenalties);
+            }
+
+            var betResult = new BetResultEntity
+            {
+                Id = bet.Id,
+                UserId = bet.UserId,
+                MatchId = bet.MatchId,
+                ResultId = result.Id,
+                HitResult = bet.Result.Equals(result.Result),
+                HitHomeGoals = bet.HomeGoals.Equals(result.HomeGoals),
+                HitAwayGoals = bet.AwayGoals.Equals(result.AwayGoals),
+                HitGoalsDif = bet.HomeGoals - bet.AwayGoals == result.HomeGoals - result.AwayGoals,
+                HitExactResult = bet.HomeGoals.Equals(result.HomeGoals) && bet.AwayGoals.Equals(result.AwayGoals),
+                HitPenalties = hitPenalties
+            };
+
+            var betPoints = 0;
+            betPoints += betResult.HitResult ? BetResultPointsHelper.BetResultPoints["HitResult"] : 0;
+            betPoints += betResult.HitPenalties ? BetResultPointsHelper.BetResultPoints["HitPenalties"] : 0;
+            if (betResult.HitExactResult)
+            {
+                betPoints += BetResultPointsHelper.BetResultPoints["HitExactResult"];
+            }
+            else
+            {
+                betPoints += betResult.HitHomeGoals ? BetResultPointsHelper.BetResultPoints["HitHomeGoals"] : 0;
+                betPoints += betResult.HitAwayGoals ? BetResultPointsHelper.BetResultPoints["HitAwayGoals"] : 0;
+                betPoints += betResult.HitGoalsDif && !bet.HomeGoals.Equals(bet.AwayGoals) ? BetResultPointsHelper.BetResultPoints["HitGoalsDif"] : 0;
+            }
+
+            betResult.Points = betPoints;
+
+            return betResult;
+        }
+
         [HttpPost]
         public async Task<JsonResult> SetMatchResult(MatchResultModel model)
         {
@@ -99,42 +223,19 @@ namespace Southworks.Prode.Web.Controllers
                 }
 
                 var match = this.matchesService.GetMatch(model.Id);
-                if (match == null)
+                if (match.PlayedOn.Value > DateTime.UtcNow)
                 {
-                    throw new Exception("El partido especificado no existe!");
-                }
-
-                if (!match.Stage.SupportPenalties() && (model.HomePenalties.HasValue || model.AwayPenalties.HasValue))
-                {
-                    throw new Exception("No se pueden especificar penales en un partido de esta etapa!");
-                }
-
-                MatchResult result;
-                if (model.HomeGoals > model.AwayGoals)
-                {
-                    result = MatchResult.HomeVictory;
-                }
-                else if (model.HomeGoals < model.AwayGoals)
-                {
-                    result = MatchResult.AwayVictory;
-                }
-                else if (match.Stage.SupportPenalties())
-                {
-                    result = model.HomePenalties > model.AwayPenalties ? MatchResult.HomeVictory : MatchResult.AwayVictory;
-                }
-                else
-                {
-                    result = MatchResult.Draw;
+                    throw new Exception("El partido aun no ha iniciado!");
                 }
 
                 await this.matchResultsService.SaveResultAsync(new MatchResultEntity
                 {
-                    Id = model.Id,
+                    MatchId = model.Id,
                     HomeGoals = model.HomeGoals,
                     AwayGoals = model.AwayGoals,
                     HomePenalties = model.HomePenalties,
                     AwayPenalties = model.AwayPenalties,
-                    Result = result
+                    Result = model.GetResult(match)
                 });
 
                 return Json("Ok");

@@ -1,0 +1,85 @@
+﻿@model BetResultsListViewModel
+
+@{
+    ViewBag.Title = "Calcular Apuestas";
+
+    var culture = new System.Globalization.CultureInfo("es-AR");
+}
+
+@section Scripts
+{
+    <script>
+        $('.btn-guardar').click(function (obj) {
+            window.location.href = '@Url.Action("SaveMatchBetResults", "Admin", new { MatchId = Model.Match.Id })';
+        });
+        $('.btn-volver').click(function (obj) {
+            window.location.href = '@Url.Action("Matches", "Admin")';
+        });
+    </script>
+}
+
+<div class="jumbotron">
+    <h1>Apuestas del Partido</h1>
+
+    <table class="table table-matches">
+        <tbody>
+            <tr>
+                <td class="match-stage">
+                    @MatchStagesHelper.MatchStages.FirstOrDefault(x => Model.Match.Stage.ToString().Equals(x.Value)).Text
+                </td>
+                <td class="match-date">
+                    @Model.Match.PlayedOn.ToLocalTime().ToString("dddd d 'de' MMMM, H:mm 'hs'", culture)
+                </td>
+                <td class="text-right">
+                    @Model.Match.HomeTeam <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@Model.Match.HomeTeamCode.ToLower()" alt="@Model.Match.HomeTeamCode" style="width: 64px" />
+                </td>
+                <td class="text-center">@Model.Match.HomeTeamGoals @(Model.Match.PenaltiesDefinition ? $"({Model.Match.HomeTeamPenalties})" : string.Empty) - @(Model.Match.PenaltiesDefinition ? $"({Model.Match.AwayTeamPenalties})" : string.Empty) @Model.Match.AwayTeamGoals</td>
+                <td class="text-left">
+                    <img src="https://fsprdcdnpublic.azureedge.net/global-pictures/flags-fwc2018-4/@Model.Match.AwayTeamCode.ToLower()" alt="@Model.Match.AwayTeamCode" style="width: 64px" /> @Model.Match.AwayTeam
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary btn-guardar">Guardar</button>
+    <button type="button" class="btn btn-default btn-volver">Volver</button>
+</div>
+
+
+<div class="row">
+    <div>
+        <table class="table table-bets">
+            <thead>
+                <tr>
+                    <th class="info">Jugador</th>
+                    <th class="info text-center">Apuesta</th>
+                    <th class="success text-center">Puntos</th>
+                    <th class="text-center">Resultado</th>
+                    <th class="text-center">Goles Local</th>
+                    <th class="text-center">Goles Visitante</th>
+                    <th class="text-center">Diferencia de Goles</th>
+                    <th class="text-center">Resultado Exacto</th>
+                    <th class="text-center">Penales</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bet in Model.BetResultsList)
+                {
+                    var penaltiesDefinition = MatchStagesHelper.SupportPenalties(Model.Match.Stage) && bet.Bet.HomeGoals == bet.Bet.AwayGoals;
+
+                    <tr>
+                        <td class="info">@bet.User.Name (@bet.User.Email)</td>
+                        <td class="info text-center">@bet.Bet.HomeGoals @(penaltiesDefinition ? $"({bet.Bet.HomePenalties})" : string.Empty) - @(penaltiesDefinition ? $"({bet.Bet.AwayPenalties})" : string.Empty) @bet.Bet.AwayGoals</td>
+                        <td class="success text-center">@bet.BetResult.Points</td>
+                        <td class="text-center">@bet.BetResult.HitResult</td>
+                        <td class="text-center">@bet.BetResult.HitHomeGoals</td>
+                        <td class="text-center">@bet.BetResult.HitAwayGoals</td>
+                        <td class="text-center">@bet.BetResult.HitGoalsDif</td>
+                        <td class="text-center">@bet.BetResult.HitExactResult</td>
+                        <td class="text-center">@bet.BetResult.HitPenalties</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

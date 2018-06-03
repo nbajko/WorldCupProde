@@ -34,5 +34,9 @@ namespace Southworks.Prode.Web.Models
         public bool Completed { get; set; }
 
         public bool PenaltiesDefinition { get; set; }
+
+        public bool Alert { get; set; }
+
+        public bool AllowToSave { get; set; }
     }
 }

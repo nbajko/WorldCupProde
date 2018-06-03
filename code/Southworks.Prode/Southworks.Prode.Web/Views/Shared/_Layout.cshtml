@@ -18,16 +18,20 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Southworks Prode", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav mr-auto">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Admin", "Matches", "Admin")</li>
+                    <li>@Html.ActionLink("Mis Partidos", "AllMatches", "Player")</li>
+                    <li>@Html.ActionLink("Tabla", "Index", "Standings")</li>
+                    @if (User.UserIsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Admin Partidos", "Matches", "Admin")</li>
+                    }
                 </ul>
 
                 <span class="navbar-text">
-                    <span>@IdentityHelper.GetUserDisplayName(User.Identity)</span>
+                    <span>@User.Identity.GetUserDisplayName()</span>
                     <span>|</span>
                     <span>@Html.ActionLink("Log out", "SignOut", "Auth")</span>
                 </span>

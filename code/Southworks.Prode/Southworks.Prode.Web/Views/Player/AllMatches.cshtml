@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Mis Partidos";
+}
+
+@section Scripts
+{
+    <script>
+    $('.match-save').click(function (obj) {
+        window.helpers().saveMatch(obj, '@Url.Action("SetBetResult", "Player")');
+    });
+    </script>
+}
+
+<div class="jumbotron">
+    <h1>Mis Partidos</h1>
+</div>
+
+<div class="row">
+    <div>
+        @Html.Action("MyMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = true })
+    </div>
+</div>

@@ -198,15 +198,23 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MatchesController.cs" />
+    <Compile Include="Controllers\PlayerController.cs" />
+    <Compile Include="Controllers\StandingsController.cs" />
+    <Compile Include="Features\RoleAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BetResultPointsHelper.cs" />
     <Compile Include="Helpers\IdentityHelper.cs" />
+    <Compile Include="Models\BetResultsListViewModel.cs" />
+    <Compile Include="Models\BetResultViewModel.cs" />
     <Compile Include="Models\MatchesListRequest.cs" />
+    <Compile Include="Models\MatchesListViewModel.cs" />
     <Compile Include="Models\MatchModel.cs" />
     <Compile Include="Models\MatchResultModel.cs" />
     <Compile Include="Models\MatchViewModel.cs" />
     <Compile Include="Helpers\MatchStagesHelper.cs" />
+    <Compile Include="Models\StandingsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -253,6 +261,11 @@
     <Content Include="Views\Admin\Matches.cshtml" />
     <Content Include="Views\Admin\NewMatch.cshtml" />
     <Content Include="Views\Matches\AllMatchesPartial.cshtml" />
+    <Content Include="Views\Player\AllMatches.cshtml" />
+    <Content Include="Views\Admin\GetMatchBetsResults.cshtml" />
+    <Content Include="Views\Standings\StandingsPartial.cshtml" />
+    <Content Include="Views\Standings\Index.cshtml" />
+    <Content Include="Views\Matches\AllMatches.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

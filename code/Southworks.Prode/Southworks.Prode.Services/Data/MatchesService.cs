@@ -35,7 +35,7 @@ namespace Southworks.Prode.Services.Data
         public async Task<MatchEntity> SaveMatch(MatchEntity entity)
         {
             MatchEntity existingEntity = null;
-            if (entity.Id != null || Guid.Empty.Equals(entity.Id))
+            if (entity.Id != null && !Guid.Empty.Equals(entity.Id))
             {
                 existingEntity = await this.matchesRepository.GetAsync(entity.Id);
             }

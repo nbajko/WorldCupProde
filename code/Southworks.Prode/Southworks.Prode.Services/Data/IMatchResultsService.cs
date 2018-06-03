@@ -10,5 +10,7 @@ namespace Southworks.Prode.Services.Data
         IQueryable<MatchResultEntity> GetResults();
 
         Task<MatchResultEntity> SaveResultAsync(MatchResultEntity entity);
+
+        MatchResultEntity GetResultByMatch(Guid matchId);
     }
 }

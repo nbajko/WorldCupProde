@@ -4,17 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Southworks.Prode.Data.Models
 {
-    [Table("MatchResults")]
-    public class MatchResultEntity : BaseMatchResult, IIdentifiable<Guid>
+    [Table("MatchBets")]
+    public class MatchBetEntity : BaseMatchResult, IIdentifiable<Guid>
     {
         [Key]
         public Guid Id { get; set; }
-    }
 
-    public enum MatchResult
-    {
-        HomeVictory,
-        Draw,
-        AwayVictory
+        [Index]
+        public Guid UserId { get; set; }
     }
 }
