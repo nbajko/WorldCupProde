@@ -38,9 +38,9 @@ namespace Southworks.Prode.Web.Controllers
         }
 
         // GET: Matches
-        public ActionResult Matches()
+        public ActionResult Matches(MatchFilter filter)
         {
-            return View();
+            return View(filter);
         }
 
         // GET: NewMatch
@@ -57,39 +57,47 @@ namespace Southworks.Prode.Web.Controllers
 
         // POST: NewMatch
         [HttpPost]
-        public ActionResult NewMatch(MatchModel model)
+        public async Task<ActionResult> NewMatch(MatchModel model)
         {
-            if (!this.ModelState.IsValid)
+            try
             {
-                this.ViewBag.Countries = this.countriesService.GetCountries()
-                    .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() })
-                    .OrderBy(x => x.Text)
-                    .ToList();
+                if (!this.ModelState.IsValid)
+                {
+                    this.ViewBag.Countries = this.countriesService.GetCountries()
+                        .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() })
+                        .OrderBy(x => x.Text)
+                        .ToList();
 
+                    return View();
+                }
+
+                if (matchesService.ExistsMatch(model.HomeTeam, model.AwayTeam, model.Stage))
+                {
+                    this.ModelState.AddModelError(string.Empty, "El partido especificado ya existe.");
+
+                    this.ViewBag.Countries = this.countriesService.GetCountries()
+                        .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() })
+                        .OrderBy(x => x.Text)
+                        .ToList();
+
+                    return View();
+                }
+
+                await this.matchesService.SaveMatch(new MatchEntity
+                {
+                    HomeTeam = model.HomeTeam,
+                    AwayTeam = model.AwayTeam,
+                    PlayedOn = model.PlayedOn.ToUniversalTime(),
+                    Stage = model.Stage
+                });
+
+                return RedirectToAction("Matches");
+            }
+            catch (Exception ex)
+            {
+                this.ModelState.AddModelError(string.Empty, $"Ups! Hubo un error: {ex.Message}");
                 return View();
             }
-
-            if (matchesService.ExistsMatch(model.HomeTeam, model.AwayTeam, model.Stage))
-            {
-                this.ModelState.AddModelError(string.Empty, "El partido especificado ya existe.");
-
-                this.ViewBag.Countries = this.countriesService.GetCountries()
-                    .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() })
-                    .OrderBy(x => x.Text)
-                    .ToList();
-
-                return View();
-            }
-
-            this.matchesService.SaveMatch(new MatchEntity
-            {
-                HomeTeam = model.HomeTeam,
-                AwayTeam = model.AwayTeam,
-                PlayedOn = model.PlayedOn.ToUniversalTime(),
-                Stage = model.Stage
-            });
-
-            return RedirectToAction("Matches");
         }
 
         [HttpGet]

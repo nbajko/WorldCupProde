@@ -1,5 +1,10 @@
-﻿@{
+﻿@model MatchFilter
+
+@{
     ViewBag.Title = "Partidos";
+
+    var stages = MatchStagesHelper.MatchStages.ToList();
+    stages.Insert(0, new SelectListItem { Value = null, Text = "Todos" });
 }
 
 @section Scripts
@@ -24,6 +29,6 @@
 
 <div class="row">
     <div>
-        @Html.Action("AllMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = true, AllowCalculateResults = true })
+        @Html.Action("AllMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = true, AllowCalculateResults = true, MatchStage = Model.MatchStage })
     </div>
 </div>

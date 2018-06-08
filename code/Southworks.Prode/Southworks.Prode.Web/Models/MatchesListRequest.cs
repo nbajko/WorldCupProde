@@ -1,4 +1,6 @@
-﻿namespace Southworks.Prode.Web.Models
+﻿using Southworks.Prode.Data.Models;
+
+namespace Southworks.Prode.Web.Models
 {
     public class MatchesListRequest
     {
@@ -13,5 +15,7 @@
         public bool AllowSaveResults { get; set; }
 
         public bool AllowCalculateResults { get; set; }
+
+        public MatchStage? MatchStage { get; set; }
     }
 }

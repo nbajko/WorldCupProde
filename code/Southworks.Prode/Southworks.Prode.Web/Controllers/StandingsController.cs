@@ -32,9 +32,9 @@ namespace Southworks.Prode.Web.Controllers
         public ActionResult StandingsPartial(int count = 0)
         {
             var users = this.usersService.Get().ToList();
-            var model = this.betResultsService.GetBetResults().ToList()
-                .GroupBy(x => x.UserId)
-                .Select(x => GetPlayerStandings(x, users))
+            var betResults = this.betResultsService.GetBetResults().ToList();
+
+            var model = users.Select(x => GetPlayerStandings(betResults.Where(b => b.UserId.Equals(x.Id)), x))
                 .OrderByDescending(x => x.Points)
                 .ThenByDescending(x => x.ExactResult)
                 .ThenByDescending(x => x.Penalties)
@@ -48,13 +48,13 @@ namespace Southworks.Prode.Web.Controllers
             return View(model);
         }
 
-        private StandingsViewModel GetPlayerStandings(IGrouping<Guid, BetResultEntity> bets, IEnumerable<UserEntity> users)
+        private StandingsViewModel GetPlayerStandings(IEnumerable<BetResultEntity> bets, UserEntity user)
         {
             var model = new StandingsViewModel
             {
-                UserId = bets.Key,
-                UserName = users.FirstOrDefault(u => u.Id.Equals(bets.Key)).Name,
-                UserEmail = users.FirstOrDefault(u => u.Id.Equals(bets.Key)).Email,
+                UserId = user.Id,
+                UserName = user.Name,
+                UserEmail = user.Email,
                 Points = bets.Sum(b => b.Points),
                 Results = bets.Count(b => b.HitResult),
                 ExactResult = bets.Count(b => b.HitExactResult),

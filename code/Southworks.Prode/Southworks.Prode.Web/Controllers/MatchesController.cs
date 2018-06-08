@@ -64,6 +64,11 @@ namespace Southworks.Prode.Web.Controllers
                 matchesList = matchesList.Where(x => x.Completed).ToList();
             }
 
+            if (request.MatchStage.HasValue)
+            {
+                matchesList = matchesList.Where(x => x.Stage.Equals(request.MatchStage.Value)).ToList();
+            }
+
             if (request.OrderByDescending)
             {
                 matchesList = matchesList.OrderByDescending(x => x.PlayedOn).ToList();

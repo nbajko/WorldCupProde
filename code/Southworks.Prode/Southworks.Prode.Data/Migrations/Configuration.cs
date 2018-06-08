@@ -49,7 +49,7 @@ namespace Southworks.Prode.Data.Migrations
                 );
 
             context.UsersDbSet.AddOrUpdate(x => x.Email,
-                new UserEntity { Id = Guid.NewGuid(), Name = "Nicolás Bajkó", Email = "nicolas.bajko@soutworks.com", AccessLevel = UserAccessLevel.Admin }
+                new UserEntity { Id = Guid.NewGuid(), Name = "Nicolás Bajkó", Email = "nicolas.bajko@southworks.com", AccessLevel = UserAccessLevel.Admin }
                 );
         }
     }

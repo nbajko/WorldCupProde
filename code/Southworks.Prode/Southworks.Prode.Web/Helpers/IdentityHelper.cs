@@ -34,6 +34,11 @@ namespace Southworks.Prode.Web.Helpers
 
         public static string GetName(this IIdentity identity)
         {
+            if (!string.IsNullOrWhiteSpace(identity.ClaimValue("name")))
+            {
+                return identity.ClaimValue("name");
+            }
+
             if (!string.IsNullOrWhiteSpace(identity.Name))
             {
                 return identity.Name;
@@ -45,7 +50,7 @@ namespace Southworks.Prode.Web.Helpers
                 return nameClaim;
             }
 
-            return identity.ClaimValue("name");
+            return identity.GetEmailAddress();
         }
 
         public static string GetUserDisplayName(this IIdentity identity)

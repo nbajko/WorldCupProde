@@ -15,6 +15,7 @@ namespace Southworks.Prode.Web.Models
             new SelectListItem { Text = "Grupo E", Value = MatchStage.GroupE.ToString() },
             new SelectListItem { Text = "Grupo F", Value = MatchStage.GroupF.ToString() },
             new SelectListItem { Text = "Grupo G", Value = MatchStage.GroupG.ToString() },
+            new SelectListItem { Text = "Grupo H", Value = MatchStage.GroupH.ToString() },
             new SelectListItem { Text = "Octavos", Value = MatchStage.Round16.ToString() },
             new SelectListItem { Text = "Cuartos", Value = MatchStage.QuarterFinals.ToString() },
             new SelectListItem { Text = "Semis", Value = MatchStage.SemiFinals.ToString() },
