@@ -1,0 +1,63 @@
+﻿@model Southworks.Prode.Web.Models.UserBetResultsListViewModel
+
+@{
+    var culture = new System.Globalization.CultureInfo("es-AR");
+    ViewBag.Title = "Puntos";
+}
+
+<div class="jumbotron">
+    <h1>Puntos de @Model.User.Name (@Model.User.Email)</h1>
+    <h2>Totales</h2>
+    <p><strong>Puntos: </strong>@Model.BetResults.Sum(x => x.Points)</p>
+    <p><strong>Resultados: </strong>@Model.BetResults.Count(x => x.HitResult)</p>
+    <p><strong>R. Exactos: </strong>@Model.BetResults.Count(x => x.HitExactResult)</p>
+    <p><strong>Extras: </strong>@Model.BetResults.Count(x => x.ExtraPoint)</p>
+</div>
+
+<div class="row">
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="info">Fase</th>
+                    <th class="info">Fecha</th>
+                    <th class="text-center" colspan="3">Partido</th>
+                    <th class="text-center">Pronostico</th>
+                    <th class="success text-center">Puntos</th>
+                    <th class="success text-center">Resultado</th>
+                    <th class="success success text-center">R. Exacto</th>
+                    <th class="success text-center">P. Extra</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bet in Model.BetResults)
+                {
+                    <tr>
+                        <td class="info match-stage">
+                            @MatchStagesHelper.MatchStages.FirstOrDefault(x => bet.Stage.ToString().Equals(x.Value)).Text
+                        </td>
+                        <td class="info match-date">
+                            @bet.PlayedOn.ToLocalTime().ToString("dddd d 'de' MMMM, H:mm 'hs'", culture)
+                        </td>
+                        <td class="text-right">
+                            @bet.HomeTeam
+                        </td>
+                        <td class="text-center">
+                            @bet.HomeTeamGoals @(bet.PenaltiesDefinition ? $"({bet.HomeTeamPenalties.Value})" : string.Empty) - @(bet.PenaltiesDefinition ? $"({bet.AwayTeamPenalties.Value})" : string.Empty) @bet.AwayTeamGoals
+                        </td>
+                        <td class="text-left">
+                            @bet.AwayTeam
+                        </td>
+                        <td class="match-bet text-center">
+                            @bet.BetHomeTeamGoals @(bet.BetPenalties ? $"({bet.BetHomeTeamPenalties.Value})" : string.Empty) - @(bet.BetPenalties ? $"({bet.BetAwayTeamPenalties.Value})" : string.Empty) @bet.BetAwayTeamGoals
+                        </td>
+                        <td class="success text-center">@bet.Points</td>
+                        <td class="success text-center">@(bet.HitResult ? "Si" : "No")</td>
+                        <td class="success text-center">@(bet.HitExactResult ? "Si" : "No")</td>
+                        <td class="success text-center">@(bet.ExtraPoint ? "Si" : "No")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

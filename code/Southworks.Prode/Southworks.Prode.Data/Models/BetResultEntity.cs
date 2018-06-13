@@ -31,6 +31,8 @@ namespace Southworks.Prode.Data.Models
 
         public bool HitPenalties { get; set; }
 
+        public bool ExtraPoint { get; set; }
+
         public int Points { get; set; }
     }
 }

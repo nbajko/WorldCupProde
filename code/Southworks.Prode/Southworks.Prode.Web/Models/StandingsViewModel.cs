@@ -16,8 +16,6 @@ namespace Southworks.Prode.Web.Models
 
         public int ExactResult { get; set; }
 
-        public int Penalties { get; set; }
-
-        public int Extra { get; set; }
+        public int ExtraPoints { get; set; }
     }
 }

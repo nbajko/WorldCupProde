@@ -62,6 +62,10 @@
                         <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green; display:none;"></span>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true" style="color:red; display:none;"></span>
                     }
+                    else if (match.Completed)
+                    {
+                        @Html.ActionLink("Detalles", "BetResults", "Matches", new { Id = match.Id }, null)
+                    }
                 </td>
             </tr>
         }

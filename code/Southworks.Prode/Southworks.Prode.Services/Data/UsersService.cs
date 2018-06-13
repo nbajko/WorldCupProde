@@ -27,6 +27,11 @@ namespace Southworks.Prode.Services.Data
                 .FirstOrDefault();
         }
 
+        public UserEntity GetUser(Guid userId)
+        {
+            return this.usersRepository.Get(userId);
+        }
+
         public async Task<UserEntity> SetUser(UserEntity entity)
         {
             UserEntity existingEntity = null;

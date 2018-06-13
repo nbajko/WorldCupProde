@@ -42,6 +42,7 @@ namespace Southworks.Prode.Services.Data
                     existingEntity.HitPenalties = entity.HitPenalties;
                     existingEntity.HitResult = entity.HitResult;
                     existingEntity.Points = entity.Points;
+                    existingEntity.ExtraPoint = entity.ExtraPoint;
                 }
                 else
                 {

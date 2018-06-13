@@ -114,7 +114,7 @@ namespace Southworks.Prode.Web.Controllers
             {
                 throw new Exception("No esta cargado el resultado para el partido especificado!");
             }
-            
+
             var bets = this.matchBetsService.GetBetsByMatch(matchId).ToList();
             var users = this.usersService.Get().ToList();
 
@@ -196,7 +196,13 @@ namespace Southworks.Prode.Web.Controllers
 
             var betPoints = 0;
             betPoints += betResult.HitResult ? BetResultPointsHelper.BetResultPoints["HitResult"] : 0;
-            betPoints += betResult.HitPenalties ? BetResultPointsHelper.BetResultPoints["HitPenalties"] : 0;
+
+            if (betResult.HitPenalties)
+            {
+                betPoints += BetResultPointsHelper.BetResultPoints["HitPenalties"];
+                betResult.ExtraPoint = true;
+            }
+            
             if (betResult.HitExactResult)
             {
                 betPoints += BetResultPointsHelper.BetResultPoints["HitExactResult"];
@@ -206,6 +212,7 @@ namespace Southworks.Prode.Web.Controllers
                 betPoints += betResult.HitHomeGoals ? BetResultPointsHelper.BetResultPoints["HitHomeGoals"] : 0;
                 betPoints += betResult.HitAwayGoals ? BetResultPointsHelper.BetResultPoints["HitAwayGoals"] : 0;
                 betPoints += betResult.HitGoalsDif && !bet.HomeGoals.Equals(bet.AwayGoals) ? BetResultPointsHelper.BetResultPoints["HitGoalsDif"] : 0;
+                betResult.ExtraPoint = betResult.ExtraPoint || betResult.HitHomeGoals || betResult.HitAwayGoals || (betResult.HitGoalsDif && !bet.HomeGoals.Equals(bet.AwayGoals));
             }
 
             betResult.Points = betPoints;

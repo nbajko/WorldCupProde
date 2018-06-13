@@ -16,19 +16,22 @@ namespace Southworks.Prode.Web.Controllers
         private readonly IMatchBetsService matchBetsService;
         private readonly ICountriesService countriesService;
         private readonly IBetResultsService betResultsService;
+        private readonly IUsersService usersService;
 
         public MatchesController(
             IMatchesService matchesService,
             IMatchResultsService matchResultsService,
             IMatchBetsService matchBetsService,
             ICountriesService countriesService, 
-            IBetResultsService betResultsService)
+            IBetResultsService betResultsService,
+            IUsersService usersService)
         {
             this.matchesService = matchesService;
             this.matchResultsService = matchResultsService;
             this.matchBetsService = matchBetsService;
             this.countriesService = countriesService;
             this.betResultsService = betResultsService;
+            this.usersService = usersService;
         }
 
         public ActionResult AllMatches()
@@ -125,6 +128,55 @@ namespace Southworks.Prode.Web.Controllers
             return View("AllMatchesPartial", new MatchesListViewModel { Matches = matchesList, Request = request });
         }
 
+        public ActionResult BetResults(Guid id)
+        {
+            var match = this.matchesService.GetMatch(id);
+
+            if (match == null)
+            {
+                return RedirectToAction("AllMatches");
+            }
+
+            var result = this.matchResultsService.GetResultByMatch(id);
+            if (match == null)
+            {
+                throw new Exception("No esta cargado el resultado para el partido especificado!");
+            }
+
+            var bets = this.matchBetsService.GetBetsByMatch(id).ToList();
+            var betResults = this.betResultsService.GetBetResultsByMatch(id).ToList();
+            var users = this.usersService.Get().ToList();
+
+            var countries = this.countriesService.GetCountries().ToList();
+            var homeTeam = countries.FirstOrDefault(x => match.HomeTeam.Equals(x.Id));
+            var awayTeam = countries.FirstOrDefault(x => match.AwayTeam.Equals(x.Id));
+
+            var model = new BetResultsListViewModel
+            {
+                BetResultsList = bets.Select(x => new BetResultViewModel { Bet = x, BetResult = betResults.FirstOrDefault(r => r.Id.Equals(x.Id)), User = users.FirstOrDefault(u => u.Id.Equals(x.UserId)) }).OrderByDescending(x => x.BetResult.Points),
+                Match = new MatchViewModel
+                {
+                    Id = match.Id,
+                    HomeTeamId = match.HomeTeam,
+                    HomeTeam = homeTeam.Name,
+                    HomeTeamCode = homeTeam.Code,
+                    HomeTeamGoals = result.HomeGoals,
+                    HomeTeamPenalties = result.HomePenalties,
+                    AwayTeamId = match.AwayTeam,
+                    AwayTeam = awayTeam.Name,
+                    AwayTeamCode = awayTeam.Code,
+                    AwayTeamGoals = result.AwayGoals,
+                    AwayTeamPenalties = result.AwayPenalties,
+                    PlayedOn = match.PlayedOn.Value,
+                    Stage = match.Stage,
+                    Completed = match.PlayedOn <= DateTime.UtcNow,
+                    PenaltiesDefinition = match.Stage.SupportPenalties() && result.HomeGoals == result.AwayGoals
+                }
+            };
+
+            return View(model);
+        }
+
         private MatchViewModel SetCloseToPlayAlert(MatchViewModel match)
         {
             match.Alert = match.PlayedOn.AddHours(-1) < DateTime.UtcNow && (!match.HomeTeamGoals.HasValue || !match.AwayTeamGoals.HasValue);
@@ -139,7 +191,7 @@ namespace Southworks.Prode.Web.Controllers
             return match;
         }
 
-        private MatchViewModel ToMatchViewModel(MatchEntity match, IEnumerable<BaseMatchResult> results, IEnumerable<CountryEntity> countries)
+        public static MatchViewModel ToMatchViewModel(MatchEntity match, IEnumerable<BaseMatchResult> results, IEnumerable<CountryEntity> countries)
         {
             var result = results.FirstOrDefault(x => match.Id.Equals(x.MatchId));
             var homeTeam = countries.FirstOrDefault(x => match.HomeTeam.Equals(x.Id));

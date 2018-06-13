@@ -24,6 +24,7 @@
                 <ul class="nav navbar-nav mr-auto">
                     <li>@Html.ActionLink("Mis Partidos", "AllMatches", "Player")</li>
                     <li>@Html.ActionLink("Tabla", "Index", "Standings")</li>
+                    <li>@Html.ActionLink("Ayuda", "Help", "Home")</li>
                     @if (User.UserIsInRole("Admin"))
                     {
                         <li>@Html.ActionLink("Admin Partidos", "Matches", "Admin")</li>

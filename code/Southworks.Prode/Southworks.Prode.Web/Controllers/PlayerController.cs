@@ -13,14 +13,26 @@ namespace Southworks.Prode.Web.Controllers
     public class PlayerController : Controller
     {
         private readonly IMatchesService matchesService;
+        private readonly IMatchResultsService matchResultsService;
         private readonly IMatchBetsService matchBetsService;
+        private readonly IBetResultsService betResultsService;
+        private readonly IUsersService usersService;
+        private readonly ICountriesService countriesService;
 
         public PlayerController(
             IMatchesService matchesService,
-            IMatchBetsService matchBetsService)
+            IMatchResultsService matchResultsService,
+            IMatchBetsService matchBetsService,
+            IBetResultsService betResultsService,
+            IUsersService usersService,
+            ICountriesService countriesService)
         {
             this.matchesService = matchesService;
+            this.matchResultsService = matchResultsService;
             this.matchBetsService = matchBetsService;
+            this.betResultsService = betResultsService;
+            this.usersService = usersService;
+            this.countriesService = countriesService;
         }
 
         // GET: Matches
@@ -73,6 +85,55 @@ namespace Southworks.Prode.Web.Controllers
                     ExceptionMessage = ex.Message
                 });
             }
+        }
+
+        [HttpGet]
+        public ActionResult BetResults(Guid id)
+        {
+            var user = this.usersService.GetUser(id);
+            if (user == null)
+            {
+                return RedirectToAction("AllMatches");
+            }
+
+            var betResults = this.betResultsService.GetBetResults().Where(x => x.UserId.Equals(id)).ToList();
+            var matches = this.matchesService.GetMatches().ToList().Where(x => betResults.Any(b => b.MatchId.Equals(x.Id)));
+            var countries = this.countriesService.GetCountries().ToList();
+            var results = this.matchResultsService.GetResults().ToList().Where(x => betResults.Any(b => b.MatchId.Equals(x.MatchId)));
+            var bets = this.matchBetsService.GetUserBets(id).ToList().Where(x => betResults.Any(b => b.MatchId.Equals(x.MatchId)));
+
+            var list = matches.Select(x => MatchesController.ToMatchViewModel(x, results, countries))
+                .Select(x => ToBetResultViewModel(x, betResults.FirstOrDefault(b => b.MatchId.Equals(x.Id)), bets.FirstOrDefault(b => b.MatchId.Equals(x.Id))))
+                .OrderBy(x => x.PlayedOn);
+
+            return View(new UserBetResultsListViewModel { User = user, BetResults = list });
+        }
+
+        private UserBetResultViewModel ToBetResultViewModel(MatchViewModel match, BetResultEntity betResult, MatchBetEntity bet)
+        {
+            return new UserBetResultViewModel
+            {
+                AwayTeam = match.AwayTeam,
+                AwayTeamCode = match.AwayTeamCode,
+                AwayTeamGoals = match.AwayTeamGoals.Value,
+                AwayTeamPenalties = match.AwayTeamPenalties,
+                HomeTeam = match.HomeTeam,
+                HomeTeamCode = match.HomeTeamCode,
+                HomeTeamGoals = match.HomeTeamGoals.Value,
+                HomeTeamPenalties = match.HomeTeamPenalties,
+                PenaltiesDefinition = match.PenaltiesDefinition,
+                PlayedOn = match.PlayedOn,
+                Stage = match.Stage,
+                BetAwayTeamGoals = bet.AwayGoals,
+                BetAwayTeamPenalties = bet.AwayPenalties,
+                BetHomeTeamGoals = bet.HomeGoals,
+                BetHomeTeamPenalties = bet.HomePenalties,
+                Points = betResult.Points,
+                HitResult = betResult.HitResult,
+                HitExactResult = betResult.HitExactResult,
+                ExtraPoint = betResult.ExtraPoint,
+                BetPenalties = match.Stage.SupportPenalties() && bet.AwayGoals == bet.HomeGoals
+            };
         }
     }
 }

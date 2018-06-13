@@ -8,5 +8,10 @@ namespace Southworks.Prode.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Help()
+        {
+            return View();
+        }
     }
 }

@@ -2,30 +2,34 @@
 
 @{
     Layout = null;
+    var index = 0;
 }
 
 <table class="table table-striped table-standings">
     <thead>
         <tr>
-            <th>Jugador</th>
-            <th class="text-center">Puntos</th>
+            <th>&nbsp;</th>
+            <th class="info">Jugador</th>
+            <th class="info text-center">Puntos</th>
             <th class="text-center">Aciertos</th>
             <th class="text-center">R. Exacto</th>
-            <th class="text-center">Penales</th>
-            <th class="text-center">Extra</th>
+            <th class="text-center">Extras</th>
+            <th class="text-center">&nbsp;</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var player in Model)
         {
-            <tr>
-                <td>@player.UserName (@player.UserEmail)</td>
-                <td class="text-center">@player.Points</td>
-                <td class="text-center">@player.Results</td>
-                <td class="text-center">@player.ExactResult</td>
-                <td class="text-center">@player.Penalties</td>
-                <td class="text-center">@player.Extra</td>
-            </tr>
+            index++;
+        <tr>
+            <td>@index</td>
+            <td class="info">@player.UserName (@player.UserEmail)</td>
+            <td class="info text-center">@player.Points</td>
+            <td class="text-center">@player.Results</td>
+            <td class="text-center">@player.ExactResult</td>
+            <td class="text-center">@player.ExtraPoints</td>
+            <td class="text-center">@Html.ActionLink("Detalles", "BetResults", "Player", new { Id = player.UserId }, null)</td>
+        </tr>
         }
     </tbody>
 </table>

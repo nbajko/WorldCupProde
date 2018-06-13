@@ -210,11 +210,14 @@
     <Compile Include="Models\BetResultViewModel.cs" />
     <Compile Include="Models\MatchesListRequest.cs" />
     <Compile Include="Models\MatchesListViewModel.cs" />
+    <Compile Include="Models\MatchFilter.cs" />
     <Compile Include="Models\MatchModel.cs" />
     <Compile Include="Models\MatchResultModel.cs" />
     <Compile Include="Models\MatchViewModel.cs" />
     <Compile Include="Helpers\MatchStagesHelper.cs" />
     <Compile Include="Models\StandingsViewModel.cs" />
+    <Compile Include="Models\UserBetResultsListViewModel.cs" />
+    <Compile Include="Models\UserBetResultViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -266,6 +269,9 @@
     <Content Include="Views\Standings\StandingsPartial.cshtml" />
     <Content Include="Views\Standings\Index.cshtml" />
     <Content Include="Views\Matches\AllMatches.cshtml" />
+    <Content Include="Views\Home\Help.cshtml" />
+    <Content Include="Views\Player\BetResults.cshtml" />
+    <Content Include="Views\Matches\BetResults.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

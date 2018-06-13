@@ -6,18 +6,6 @@
     var culture = new System.Globalization.CultureInfo("es-AR");
 }
 
-@section Scripts
-{
-    <script>
-        $('.btn-guardar').click(function (obj) {
-            window.location.href = '@Url.Action("SaveMatchBetResults", "Admin", new { MatchId = Model.Match.Id })';
-        });
-        $('.btn-volver').click(function (obj) {
-            window.location.href = '@Url.Action("Matches", "Admin")';
-        });
-    </script>
-}
-
 <div class="jumbotron">
     <h1>Apuestas del Partido</h1>
 
@@ -40,11 +28,7 @@
             </tr>
         </tbody>
     </table>
-
-    <button type="button" class="btn btn-primary btn-guardar">Guardar</button>
-    <button type="button" class="btn btn-default btn-volver">Volver</button>
 </div>
-
 
 <div class="row">
     <div>
@@ -66,20 +50,19 @@
             <tbody>
                 @foreach (var bet in Model.BetResultsList)
                 {
-                    var penaltiesDefinition = MatchStagesHelper.SupportPenalties(Model.Match.Stage) && bet.Bet.HomeGoals == bet.Bet.AwayGoals;
-
-                <tr>
-                    <td class="info">@bet.User.Name (@bet.User.Email)</td>
-                    <td class="info text-center">@bet.Bet.HomeGoals @(penaltiesDefinition ? $"({bet.Bet.HomePenalties})" : string.Empty) - @(penaltiesDefinition ? $"({bet.Bet.AwayPenalties})" : string.Empty) @bet.Bet.AwayGoals</td>
-                    <td class="success text-center">@bet.BetResult.Points</td>
-                    <td class="text-center">@(bet.BetResult.HitResult ? "Si" : "No")</td>
-                    <td class="text-center">@(bet.BetResult.HitExactResult ? "Si" : "No")</td>
-                    <td class="text-center">@(bet.BetResult.ExtraPoint ? "Si" : "No")</td>
-                    <td class="active text-center">@(bet.BetResult.HitHomeGoals ? "Si" : "No")</td>
-                    <td class="active text-center">@(bet.BetResult.HitAwayGoals ? "Si" : "No")</td>
-                    <td class="active text-center">@(bet.BetResult.HitGoalsDif ? "Si" : "No")</td>
-                    <td class="active text-center">@(bet.BetResult.HitPenalties ? "Si" : "No")</td>
-                </tr>
+                    var penaltiesDefinition = Model.Match.Stage.SupportPenalties() && bet.Bet.HomeGoals == bet.Bet.AwayGoals;
+                    <tr>
+                        <td class="info">@bet.User.Name (@bet.User.Email)</td>
+                        <td class="info text-center">@bet.Bet.HomeGoals @(penaltiesDefinition ? $"({bet.Bet.HomePenalties})" : string.Empty) - @(penaltiesDefinition ? $"({bet.Bet.AwayPenalties})" : string.Empty) @bet.Bet.AwayGoals</td>
+                        <td class="success text-center">@bet.BetResult.Points</td>
+                        <td class="text-center">@(bet.BetResult.HitResult ? "Si" : "No")</td>
+                        <td class="text-center">@(bet.BetResult.HitExactResult ? "Si" : "No")</td>
+                        <td class="text-center">@(bet.BetResult.ExtraPoint ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult.HitHomeGoals ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult.HitAwayGoals ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult.HitGoalsDif ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult.HitPenalties ? "Si" : "No")</td>
+                    </tr>
                 }
             </tbody>
         </table>

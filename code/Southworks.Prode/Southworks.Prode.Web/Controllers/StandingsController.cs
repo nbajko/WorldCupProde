@@ -37,7 +37,7 @@ namespace Southworks.Prode.Web.Controllers
             var model = users.Select(x => GetPlayerStandings(betResults.Where(b => b.UserId.Equals(x.Id)), x))
                 .OrderByDescending(x => x.Points)
                 .ThenByDescending(x => x.ExactResult)
-                .ThenByDescending(x => x.Penalties)
+                .ThenByDescending(x => x.ExtraPoints)
                 .ToList();
 
             if (count > 0)
@@ -50,7 +50,7 @@ namespace Southworks.Prode.Web.Controllers
 
         private StandingsViewModel GetPlayerStandings(IEnumerable<BetResultEntity> bets, UserEntity user)
         {
-            var model = new StandingsViewModel
+            return new StandingsViewModel
             {
                 UserId = user.Id,
                 UserName = user.Name,
@@ -58,12 +58,8 @@ namespace Southworks.Prode.Web.Controllers
                 Points = bets.Sum(b => b.Points),
                 Results = bets.Count(b => b.HitResult),
                 ExactResult = bets.Count(b => b.HitExactResult),
-                Penalties = bets.Count(b => b.HitPenalties),
+                ExtraPoints = bets.Count(b => b.ExtraPoint)
             };
-
-            model.Extra = model.Points - 3 * (model.Results + model.ExactResult + model.Penalties);
-
-            return model; 
         }
     }
 }
