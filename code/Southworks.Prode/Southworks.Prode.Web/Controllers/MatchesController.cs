@@ -138,11 +138,6 @@ namespace Southworks.Prode.Web.Controllers
             }
 
             var result = this.matchResultsService.GetResultByMatch(id);
-            if (match == null)
-            {
-                throw new Exception("No esta cargado el resultado para el partido especificado!");
-            }
-
             var bets = this.matchBetsService.GetBetsByMatch(id).ToList();
             var betResults = this.betResultsService.GetBetResultsByMatch(id).ToList();
             var users = this.usersService.Get().ToList();
@@ -153,24 +148,24 @@ namespace Southworks.Prode.Web.Controllers
 
             var model = new BetResultsListViewModel
             {
-                BetResultsList = bets.Select(x => new BetResultViewModel { Bet = x, BetResult = betResults.FirstOrDefault(r => r.Id.Equals(x.Id)), User = users.FirstOrDefault(u => u.Id.Equals(x.UserId)) }).OrderByDescending(x => x.BetResult.Points),
+                BetResultsList = bets.Select(x => new BetResultViewModel { Bet = x, BetResult = betResults.FirstOrDefault(r => r.Id.Equals(x.Id)), User = users.FirstOrDefault(u => u.Id.Equals(x.UserId)) }).OrderByDescending(x => x.BetResult?.Points),
                 Match = new MatchViewModel
                 {
                     Id = match.Id,
                     HomeTeamId = match.HomeTeam,
                     HomeTeam = homeTeam.Name,
                     HomeTeamCode = homeTeam.Code,
-                    HomeTeamGoals = result.HomeGoals,
-                    HomeTeamPenalties = result.HomePenalties,
+                    HomeTeamGoals = result?.HomeGoals,
+                    HomeTeamPenalties = result?.HomePenalties,
                     AwayTeamId = match.AwayTeam,
                     AwayTeam = awayTeam.Name,
                     AwayTeamCode = awayTeam.Code,
-                    AwayTeamGoals = result.AwayGoals,
-                    AwayTeamPenalties = result.AwayPenalties,
+                    AwayTeamGoals = result?.AwayGoals,
+                    AwayTeamPenalties = result?.AwayPenalties,
                     PlayedOn = match.PlayedOn.Value,
                     Stage = match.Stage,
                     Completed = match.PlayedOn <= DateTime.UtcNow,
-                    PenaltiesDefinition = match.Stage.SupportPenalties() && result.HomeGoals == result.AwayGoals
+                    PenaltiesDefinition = match.Stage.SupportPenalties() && result != null && result.HomeGoals == result.AwayGoals
                 }
             };
 

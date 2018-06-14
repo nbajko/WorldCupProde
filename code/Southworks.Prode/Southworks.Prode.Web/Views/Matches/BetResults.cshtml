@@ -54,14 +54,14 @@
                     <tr>
                         <td class="info">@bet.User.Name (@bet.User.Email)</td>
                         <td class="info text-center">@bet.Bet.HomeGoals @(penaltiesDefinition ? $"({bet.Bet.HomePenalties})" : string.Empty) - @(penaltiesDefinition ? $"({bet.Bet.AwayPenalties})" : string.Empty) @bet.Bet.AwayGoals</td>
-                        <td class="success text-center">@bet.BetResult.Points</td>
-                        <td class="text-center">@(bet.BetResult.HitResult ? "Si" : "No")</td>
-                        <td class="text-center">@(bet.BetResult.HitExactResult ? "Si" : "No")</td>
-                        <td class="text-center">@(bet.BetResult.ExtraPoint ? "Si" : "No")</td>
-                        <td class="active text-center">@(bet.BetResult.HitHomeGoals ? "Si" : "No")</td>
-                        <td class="active text-center">@(bet.BetResult.HitAwayGoals ? "Si" : "No")</td>
-                        <td class="active text-center">@(bet.BetResult.HitGoalsDif ? "Si" : "No")</td>
-                        <td class="active text-center">@(bet.BetResult.HitPenalties ? "Si" : "No")</td>
+                        <td class="success text-center">@(bet.BetResult?.Points)</td>
+                        <td class="text-center">@(bet.BetResult == null ? string.Empty : bet.BetResult.HitResult ? "Si" : "No")</td>
+                        <td class="text-center">@(bet.BetResult == null ? string.Empty : bet.BetResult.HitExactResult ? "Si" : "No")</td>
+                        <td class="text-center">@(bet.BetResult == null ? string.Empty : bet.BetResult.ExtraPoint ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult == null ? string.Empty : bet.BetResult.HitHomeGoals ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult == null ? string.Empty : bet.BetResult.HitAwayGoals ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult == null ? string.Empty : bet.BetResult.HitGoalsDif ? "Si" : "No")</td>
+                        <td class="active text-center">@(bet.BetResult == null ? string.Empty : bet.BetResult.HitPenalties ? "Si" : "No")</td>
                     </tr>
                 }
             </tbody>
