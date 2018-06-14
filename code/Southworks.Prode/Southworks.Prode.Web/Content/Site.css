@@ -58,3 +58,13 @@ textarea {
     background-color: #d9edf7;
     border-color: #c0e1f2;
 }
+
+.btn-group-justified > .btn, .btn-group-justified > .btn-group {
+    display: table-cell;
+    float: none;
+    width: 1%;
+}
+
+.btn-group-justified > .btn-group .btn {
+    width: 100%;
+}
