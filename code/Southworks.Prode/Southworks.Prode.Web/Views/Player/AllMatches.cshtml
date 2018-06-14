@@ -1,18 +1,69 @@
 ﻿@{
     ViewBag.Title = "Mis Partidos";
+
+    var filterItems = MatchStagesHelper.MatchStages.ToList();
+    filterItems.Insert(0, new SelectListItem { Text = "Pendientes", Value = "match-pending" });
+    filterItems.Insert(0, new SelectListItem { Text = "Completados", Value = "match-completed" });
+    filterItems.Insert(0, new SelectListItem { Text = "Todos", Value = string.Empty });
 }
 
 @section Scripts
 {
     <script>
-    $('.match-save').click(function (obj) {
-        window.helpers().saveMatch(obj, '@Url.Action("SetBetResult", "Player")');
-    });
+        $('.match-save').click(function (obj) {
+            window.helpers().saveMatch(obj, '@Url.Action("SetBetResult", "Player")');
+        });
+        $('.btn[data-filter]').click(function (obj) {
+            var $this = $(this),
+                filter = $this.data("filter");
+
+            $('.btn[data-filter]').removeClass("active");
+            $this.addClass("active");
+
+            if (filter != '') {
+                $('.table-matches tr').hide();
+                $('.table-matches tr.' + filter).show();
+            } else {
+                $('.table-matches tr').show();
+            }
+        });
     </script>
 }
 
 <div class="jumbotron">
     <h1>Mis Partidos</h1>
+</div>
+
+<div class="row">
+    <div>
+        <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+                <button class="btn btn-primary active" data-filter="" type="button">Todos</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" data-filter="match-completed" type="button">Completos</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" data-filter="match-pending" type="button">Pendients</button>
+            </div>
+        </div>
+        <div class="btn-group btn-group-justified">
+            @foreach (var stage in MatchStagesHelper.MatchStages.Where(x => !MatchStagesHelper.SupportPenalties(x.Value)))
+            {
+                <div class="btn-group">
+                    <button class="btn btn-success" type="button" data-filter="@stage.Value">@stage.Text</button>
+                </div>
+            }
+        </div>
+        <div class="btn-group btn-group-justified">
+            @foreach (var stage in MatchStagesHelper.MatchStages.Where(x => MatchStagesHelper.SupportPenalties(x.Value)))
+            {
+                <div class="btn-group">
+                    <button class="btn btn-danger" type="button" data-filter="@stage.Value">@stage.Text</button>
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
 <div class="row">

@@ -9,7 +9,7 @@
     <tbody>
         @foreach (var match in Model.Matches)
         {
-            <tr class="@(Model.Request.AllowSaveResults && match.Alert ? "danger" : string.Empty)">
+            <tr class="@(Model.Request.AllowSaveResults && match.Alert ? "danger" : string.Empty) @match.Stage.ToString() @(match.Completed ? "match-completed" : "match-pending")">
                 <td class="match-stage">
                     @MatchStagesHelper.MatchStages.FirstOrDefault(x => match.Stage.ToString().Equals(x.Value)).Text
                 </td>

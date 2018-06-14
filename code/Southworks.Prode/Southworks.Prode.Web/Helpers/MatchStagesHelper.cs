@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Southworks.Prode.Data.Models;
 
@@ -25,7 +26,20 @@ namespace Southworks.Prode.Web.Models
 
         public static bool SupportPenalties(this MatchStage matchStage)
         {
-            return matchStage > MatchStage.Round16;
+            return matchStage >= MatchStage.Round16;
+        }
+
+        public static bool SupportPenalties(string matchStage)
+        {
+            try
+            {
+                var stage = (MatchStage)Enum.Parse(typeof(MatchStage), matchStage);
+                return stage >= MatchStage.Round16;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

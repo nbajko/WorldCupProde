@@ -3619,10 +3619,18 @@ input[type="button"].btn-block {
   table-layout: fixed;
 }
 
-.btn-group-justified .btn {
+.btn-group-justified>.btn, .btn-group-justified>.btn-group {
+    display: table-cell;
+    float: none;
+    width: 1%;
+} {
   display: table-cell;
   float: none;
   width: 1%;
+}
+    
+.btn-group-justified > .btn-group .btn {
+    width: 100%;
 }
 
 [data-toggle="buttons"] > .btn > input[type="radio"],
