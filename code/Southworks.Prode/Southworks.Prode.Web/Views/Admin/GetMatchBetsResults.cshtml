@@ -27,7 +27,7 @@
                 <td class="match-stage">
                     @MatchStagesHelper.MatchStages.FirstOrDefault(x => Model.Match.Stage.ToString().Equals(x.Value)).Text
                 </td>
-                <td class="match-date">
+                <td class="match-date" data-time="@Model.Match.PlayedOn.ToString()">
                     @Model.Match.PlayedOn.ToLocalTime().ToString("dddd d 'de' MMMM, H:mm 'hs'", culture)
                 </td>
                 <td class="text-right">

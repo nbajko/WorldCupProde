@@ -36,7 +36,7 @@
                         <td class="info match-stage">
                             @MatchStagesHelper.MatchStages.FirstOrDefault(x => bet.Stage.ToString().Equals(x.Value)).Text
                         </td>
-                        <td class="info match-date">
+                        <td class="info match-date" data-time="@bet.PlayedOn.ToString()">
                             @bet.PlayedOn.ToLocalTime().ToString("dddd d 'de' MMMM, H:mm 'hs'", culture)
                         </td>
                         <td class="text-right">

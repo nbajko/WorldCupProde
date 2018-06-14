@@ -51,5 +51,15 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/prode")
     @RenderSection("scripts", required: false)
+
+    <script>
+        $(function () {
+            var options = { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "numeric" };
+            $('.match-date').text(function (index, value) {
+                var t = new Date($($('.match-date')[index]).data('time') + " UTC");
+                return t.toLocaleString("es-AR", options);
+            });
+        });
+    </script>
 </body>
 </html>
