@@ -88,3 +88,7 @@ div.row > div {
 .btn-group, .btn-group-vertical {
     display: inline-block;
 }
+
+.active-user {
+    font-weight: bold;
+}
