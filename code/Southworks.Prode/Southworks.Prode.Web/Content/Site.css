@@ -26,7 +26,7 @@ textarea {
 .table.table-matches .match-goals,
 .table.table-matches .match-penalties
 {
-    width: 50px;
+    width: 80px;
 }
 
 .progress-circle {
@@ -89,6 +89,14 @@ div.row > div {
     display: inline-block;
 }
 
+input[type=number] {
+    font-size: 2rem;
+}
+
 .active-user {
     font-weight: bold;
+}
+
+.table-matches tr > td {
+    vertical-align: middle;
 }
