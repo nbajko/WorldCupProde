@@ -21,7 +21,7 @@
 
 <div class="row">
     <div>
-        <h2>Ultimos partidos</h2>
+        <h2>Últimos partidos</h2>
         @Html.Action("AllMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = false, Count = 3, ExcludePending = true, OrderByDescending = true })
         @Html.ActionLink("Todos los partidos", "AllMatches", "Matches")
     </div>
@@ -29,7 +29,7 @@
 
 <div class="row">
     <div>
-        <h2>Proximos partidos</h2>
+        <h2>Próximos partidos</h2>
         @Html.Action("MyMatchesPartial", "Matches", new MatchesListRequest { AllowSaveResults = true, Count = 3, ExcludeCompleted = true })
         @Html.ActionLink("Todos mis partidos", "AllMatches", "Player")
     </div>
