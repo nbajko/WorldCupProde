@@ -21,15 +21,22 @@
         @foreach (var player in Model)
         {
             index++;
-        <tr>
-            <td>@index</td>
-            <td class="info">@player.UserName (@player.UserEmail)</td>
-            <td class="info text-center">@player.Points</td>
-            <td class="text-center">@player.Results</td>
-            <td class="text-center">@player.ExactResult</td>
-            <td class="text-center">@player.ExtraPoints</td>
-            <td class="text-center">@Html.ActionLink("Detalles", "BetResults", "Player", new { Id = player.UserId }, null)</td>
-        </tr>
+
+            var rowClass = string.Empty;
+            if (User.Identity.GetEmailAddress() == player.UserEmail)
+            {
+                rowClass = "active-user";
+            }
+
+            <tr @rowClass>
+                <td>@index</td>
+                <td class="info">@player.UserName (@player.UserEmail)</td>
+                <td class="info text-center">@player.Points</td>
+                <td class="text-center">@player.Results</td>
+                <td class="text-center">@player.ExactResult</td>
+                <td class="text-center">@player.ExtraPoints</td>
+                <td class="text-center">@Html.ActionLink("Detalles", "BetResults", "Player", new { Id = player.UserId }, null)</td>
+            </tr>
         }
     </tbody>
 </table>

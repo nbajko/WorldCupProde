@@ -6,12 +6,27 @@
 }
 
 <div class="jumbotron">
-    <h1>Puntos de @Model.User.Name (@Model.User.Email)</h1>
+    <h1>Puntos de @Model.User.Name <small>(@Model.User.Email)</small></h1>
     <h2>Totales</h2>
-    <p><strong>Puntos: </strong>@Model.BetResults.Sum(x => x.Points)</p>
-    <p><strong>Resultados: </strong>@Model.BetResults.Count(x => x.HitResult)</p>
-    <p><strong>R. Exactos: </strong>@Model.BetResults.Count(x => x.HitExactResult)</p>
-    <p><strong>Extras: </strong>@Model.BetResults.Count(x => x.ExtraPoint)</p>
+
+    <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Puntos:
+            <span class="badge badge-primary badge-pill">@Model.BetResults.Sum(x => x.Points)</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Resultados:
+            <span class="badge badge-primary badge-pill">@Model.BetResults.Count(x => x.HitResult)</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Resultados Exactos:
+            <span class="badge badge-primary badge-pill">@Model.BetResults.Count(x => x.HitExactResult)</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Extras:
+            <span class="badge badge-primary badge-pill">@Model.BetResults.Count(x => x.ExtraPoint)</span>
+        </li>
+    </ul>
 </div>
 
 <div class="row">

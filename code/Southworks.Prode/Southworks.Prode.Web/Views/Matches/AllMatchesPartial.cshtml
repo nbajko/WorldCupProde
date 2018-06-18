@@ -22,7 +22,7 @@
                 @if (Model.Request.AllowSaveResults)
                 {
                     <td class="text-left">
-                        <input type="number" value="@(match.HomeTeamGoals.HasValue ? match.HomeTeamGoals.ToString() : string.Empty)" class="match-goals match-home text-center" />
+                        <input type="number" value="@(match.HomeTeamGoals.HasValue ? match.HomeTeamGoals.ToString() : string.Empty)" class="match-goals match-home text-center " min="0" />
                         @if (match.Stage.SupportPenalties())
                         {
                             <span>(</span><input type="number" value="@(match.HomeTeamPenalties.HasValue ? match.HomeTeamPenalties.ToString() : string.Empty)" class="match-penalties match-home text-center" /><span>)</span>
@@ -38,9 +38,9 @@
                     <td class="text-right">
                         @if (match.Stage.SupportPenalties())
                         {
-                            <span>(</span><input type="number" value="@(match.AwayTeamPenalties.HasValue ? match.AwayTeamPenalties.ToString() : string.Empty)" class="match-penalties match-away text-center" /><span>)</span>
+                            <span>(</span><input type="number" value="@(match.AwayTeamPenalties.HasValue ? match.AwayTeamPenalties.ToString() : string.Empty)" class="match-penalties match-away text-center" min="0" /><span>)</span>
                         }
-                        <input type="number" value="@(match.AwayTeamGoals.HasValue ? match.AwayTeamGoals.ToString() : string.Empty)" class="match-goals match-away text-center" />
+                        <input type="number" value="@(match.AwayTeamGoals.HasValue ? match.AwayTeamGoals.ToString() : string.Empty)" class="match-goals match-away text-center" min="0" />
                     </td>
                 }
                 else if (match.Completed)
@@ -53,10 +53,10 @@
                 <td>
                     @if (Model.Request.AllowSaveResults && match.AllowToSave)
                     {
-                        <button type="button" class="btn btn-default match-save" data-match-id="@match.Id">Guardar</button>
+                        <button type="button" class="btn btn-outline-primary match-save" data-match-id="@match.Id">Guardar</button>
                         if (Model.Request.AllowCalculateResults)
                         {
-                            <button type="button" class="btn btn-default match-calculate" data-match-id="@match.Id">Calcular</button>
+                            <button type="button" class="btn btn-outline-secondary match-calculate" data-match-id="@match.Id">Calcular</button>
                         }
                         <img src="~/Content/Images/loading.gif" class="progress-circle" style="display:none;" />
                         <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green; display:none;"></span>

@@ -51,7 +51,14 @@
                 @foreach (var bet in Model.BetResultsList)
                 {
                     var penaltiesDefinition = Model.Match.Stage.SupportPenalties() && bet.Bet.HomeGoals == bet.Bet.AwayGoals;
-                    <tr>
+
+                    var rowClass = string.Empty;
+                    if (User.Identity.GetEmailAddress() == bet.User.Email)
+                    {
+                        rowClass = "active-user";
+                    }
+
+                    <tr @rowClass>
                         <td class="info">@bet.User.Name (@bet.User.Email)</td>
                         <td class="info text-center">@bet.Bet.HomeGoals @(penaltiesDefinition ? $"({bet.Bet.HomePenalties})" : string.Empty) - @(penaltiesDefinition ? $"({bet.Bet.AwayPenalties})" : string.Empty) @bet.Bet.AwayGoals</td>
                         <td class="success text-center">@(bet.BetResult?.Points)</td>

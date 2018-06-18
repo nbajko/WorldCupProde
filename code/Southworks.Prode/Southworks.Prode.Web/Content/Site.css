@@ -1,6 +1,6 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    /*padding-top: 50px;*/
+    /*padding-bottom: 20px;*/
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -26,7 +26,7 @@ textarea {
 .table.table-matches .match-goals,
 .table.table-matches .match-penalties
 {
-    width: 50px;
+    width: 80px;
 }
 
 .progress-circle {
@@ -67,4 +67,36 @@ textarea {
 
 .btn-group-justified > .btn-group .btn {
     width: 100%;
+}
+
+/* Bootstrap overrides */
+nav {
+    margin-bottom: 50px;
+}
+    ul.navbar-nav > li {
+        margin-left: 15px;
+    }
+
+div.row {
+    margin-bottom: 15px;
+}
+
+div.row > div {
+    width: 100%;
+}
+
+.btn-group, .btn-group-vertical {
+    display: inline-block;
+}
+
+input[type=number] {
+    font-size: 2rem;
+}
+
+.active-user {
+    font-weight: bold;
+}
+
+.table-matches tr > td {
+    vertical-align: middle;
 }
